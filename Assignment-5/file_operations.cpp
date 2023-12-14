@@ -35,15 +35,15 @@ int main() {
     // TODO 1: Create and open a file for writing (use file and filename)
     // Note: For open() operation, if the file already exists, its content will be cleared
     // Hint: Only one line of code is needed
-
+    file.open(filename, std::ios::out);
 
     // TODO 2: use '<<' to write the data variable to the file
     // Hint: Only one line of code is needed
-
+    file << data;
 
     // TODO 3: Close the file
     // Hint: Only one line of code is needed
-
+    file.close();
 
     std::cout << "File created and written successfully." << std::endl;
     listFiles();
@@ -51,16 +51,18 @@ int main() {
 
     // TODO 4: Use std::ifstream to open the previous file for reading and modifying
     // Hint: Only one line of code is needed
-
+    std::ifstream fin(filename);
 
     std::string fileContent;
     std::string line;
     // TODO 5: Use while loop and std::getline to read the file content line by line
-
+    while(std::getline(fin, line)){
+        fileContent += line + '\n';
+    }
 
     // TODO 6: Close the file
     // Hint: Only one line of code is needed
-
+    fin.close();
 
     // Print the file content
     std::cout << "File content:" << std::endl;
@@ -72,13 +74,20 @@ int main() {
 
 
     // TODO 7: Replace "Your Name" with your name
-    std::string replaceString = "Your Name";
+    std::string replaceString = "ChihYi Huang";
 
     // TODO 8: use find() to find and use replace() to replace the string
     // Hint: use a while loop to replace all occurrences of the searchString: e.g. while (find_result != std::string::npos)
     // Hint: use source_string.replace(position, length, replaceString) to replace the substring
 
+    int find_result = fileContent.find(searchString);
+    // std::cout<<"start of 'File System' position: "<<find_result<<std::endl;
+    while(find_result != std::string::npos){
+        fileContent.replace(find_result, searchString.length(), replaceString);
 
+        // next
+        find_result = fileContent.find(searchString, find_result+replaceString.length());
+    }
 
     // Print the modified content
     std::cout << "Modified file content:" << std::endl;
@@ -87,12 +96,15 @@ int main() {
 
     // TODO 9: update the fileContent to the file, then close it
     // Hint: use open() again
-
+    file.open(filename, std::ios::out);
+    file << fileContent;
+    file.close();
 
 
     std::string newFilename = "assignment5_renamed.txt";
     // TODO 10: use std::rename(oldname, newname) to rename the file
     // Hint: you may need to convert the filename to c_str() before passing it to std::rename()
+    std::rename(filename.c_str(), newFilename.c_str());
 
 
 
@@ -107,7 +119,7 @@ int main() {
     std::string renamedFileContent;
     std::string renamedLine;
     while (std::getline(renamedFile, renamedLine)) {
-        renamedFileContent += renamedLine + "\n";
+        renamedFileContent += renamedLine + '\n';
     }
     renamedFile.close();
     std::cout << "New file name: " << newFilename << std::endl;
